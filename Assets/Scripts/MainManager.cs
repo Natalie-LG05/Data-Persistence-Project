@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public TextMeshProUGUI highscoreText;
     public GameObject GameOverText;
     
     private bool m_Started = false;
@@ -35,6 +37,11 @@ public class MainManager : MonoBehaviour
                 brick.PointValue = pointCountArray[i];
                 brick.onDestroyed.AddListener(AddPoint);
             }
+        }
+
+        if (HighscoreHandler.Instance != null)
+        {
+            UpdateHighscoreText();
         }
     }
 
@@ -72,5 +79,19 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+
+        if (HighscoreHandler.Instance != null)
+        {
+            if (m_Points > HighscoreHandler.Instance.highscore)
+            {
+                HighscoreHandler.Instance.highscore = m_Points;
+                UpdateHighscoreText();
+            }
+        }
+    }
+
+    private void UpdateHighscoreText()
+    {
+        highscoreText.text = $"Highscore : {HighscoreHandler.Instance.playerName} : {HighscoreHandler.Instance.highscore}";
     }
 }
